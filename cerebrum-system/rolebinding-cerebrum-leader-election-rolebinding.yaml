@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"rbac","app.kubernetes.io/created-by":"cerebrum","app.kubernetes.io/instance":"leader-election-rolebinding","app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"rolebinding","app.kubernetes.io/part-of":"cerebrum"},"name":"cerebrum-leader-election-rolebinding","namespace":"cerebrum-system"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"cerebrum-leader-election-role"},"subjects":[{"kind":"ServiceAccount","name":"cerebrum-controller-manager","namespace":"cerebrum-system"}]}
+  creationTimestamp: "2024-02-12T11:59:01Z"
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cerebrum
+    app.kubernetes.io/instance: leader-election-rolebinding
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rolebinding
+    app.kubernetes.io/part-of: cerebrum
+  name: cerebrum-leader-election-rolebinding
+  namespace: cerebrum-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cerebrum-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: cerebrum-controller-manager
+  namespace: cerebrum-system

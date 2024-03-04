@@ -1,0 +1,42 @@
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+- addresses:
+  - 192.168.0.43
+  conditions:
+    ready: true
+    serving: true
+    terminating: false
+  nodeName: abhi-master-node
+  targetRef:
+    kind: Pod
+    name: cert-manager-webhook-5655dcfb4b-hh8gl
+    namespace: cert-manager
+    uid: a43b4e43-79de-416e-93ec-23f98505e95a
+kind: EndpointSlice
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2024-02-15T09:42:28Z"
+  creationTimestamp: "2024-02-01T16:11:54Z"
+  generateName: cert-manager-webhook-
+  labels:
+    app: webhook
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/version: v1.12.0
+    endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+    kubernetes.io/service-name: cert-manager-webhook
+  name: cert-manager-webhook-k7p84
+  namespace: cert-manager
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Service
+    name: cert-manager-webhook
+    uid: 5f85493b-29ae-4f2f-8b27-05231216508d
+ports:
+- name: https
+  port: 10250
+  protocol: TCP

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"manager","app.kubernetes.io/created-by":"cerebrum","app.kubernetes.io/instance":"system","app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"namespace","app.kubernetes.io/part-of":"cerebrum","control-plane":"controller-manager"},"name":"cerebrum-system"}}
+  creationTimestamp: "2024-02-12T11:59:00Z"
+  labels:
+    app.kubernetes.io/component: manager
+    app.kubernetes.io/created-by: cerebrum
+    app.kubernetes.io/instance: system
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: namespace
+    app.kubernetes.io/part-of: cerebrum
+    control-plane: controller-manager
+    kubernetes.io/metadata.name: cerebrum-system
+  name: cerebrum-system
+spec:
+  finalizers:
+  - kubernetes

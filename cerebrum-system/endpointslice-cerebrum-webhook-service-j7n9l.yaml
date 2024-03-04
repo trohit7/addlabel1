@@ -1,0 +1,43 @@
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+- addresses:
+  - 192.168.0.5
+  conditions:
+    ready: true
+    serving: true
+    terminating: false
+  nodeName: abhi-master-node
+  targetRef:
+    kind: Pod
+    name: cerebrum-controller-manager-6d9d88f449-qcz44
+    namespace: cerebrum-system
+    uid: c5dc84ea-a2a5-4e51-804f-8a88f9b4c53f
+kind: EndpointSlice
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2024-02-20T20:45:21Z"
+  creationTimestamp: "2024-02-12T11:59:01Z"
+  generateName: cerebrum-webhook-service-
+  labels:
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/created-by: cerebrum
+    app.kubernetes.io/instance: webhook-service
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: service
+    app.kubernetes.io/part-of: cerebrum
+    endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+    kubernetes.io/service-name: cerebrum-webhook-service
+  name: cerebrum-webhook-service-j7n9l
+  namespace: cerebrum-system
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Service
+    name: cerebrum-webhook-service
+    uid: 0a642a82-1a5a-420b-9a37-66134026d06d
+ports:
+- name: ""
+  port: 9443
+  protocol: TCP

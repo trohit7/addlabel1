@@ -1,0 +1,37 @@
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+- addresses:
+  - 192.168.0.47
+  conditions:
+    ready: true
+    serving: true
+    terminating: false
+  nodeName: abhi-master-node
+  targetRef:
+    kind: Pod
+    name: gitea-69797b9b7b-7zgd4
+    namespace: default
+    uid: 1f51f5de-f6c4-4a67-a183-09623040cf54
+kind: EndpointSlice
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2024-02-15T09:42:19Z"
+  creationTimestamp: "2024-02-14T09:04:38Z"
+  generateName: gitea-service-
+  labels:
+    endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+    kubernetes.io/service-name: gitea-service
+  name: gitea-service-2xp5l
+  namespace: default
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Service
+    name: gitea-service
+    uid: af8840cf-49b3-4656-89bd-61ea6dd79434
+ports:
+- name: ""
+  port: 3000
+  protocol: TCP

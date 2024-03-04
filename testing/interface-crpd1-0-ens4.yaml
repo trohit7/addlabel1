@@ -1,0 +1,40 @@
+apiVersion: core.cerebrum.juniper.net/v1
+kind: Interface
+metadata:
+  creationTimestamp: "2024-02-12T12:42:42Z"
+  labels:
+    cerebrum.juniper.net/instanceSelector: crpd1-0
+    cerebrum.juniper.net/instanceType: Crpd
+    cerebrum.juniper.net/interfaceGroup: crpd1-ens4
+    cerebrum.juniper.net/interfaceName: ens4
+  name: crpd1-0-ens4
+  namespace: testing
+  ownerReferences:
+  - apiVersion: crpd.cerebrum.juniper.net/v1
+    kind: Crpd
+    name: crpd1-0
+    uid: 5d0dfc90-e639-4125-9eaa-62d6d449c206
+  - apiVersion: core.cerebrum.juniper.net/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: InterfaceGroup
+    name: crpd1-ens4
+    uid: ec97f632-fd60-48d3-b8d3-a038e2084a16
+spec:
+  families:
+  - addressFamily: inet
+    ipAddress: 192.168.20.11/24
+  - addressFamily: inet6
+    ipAddress: fe80::62:1eff:fecb:a660/64
+  instanceParent:
+    parentType: crpdGroup
+    reference:
+      apiVersion: crpd.cerebrum.juniper.net/v1
+      kind: CrpdGroup
+      name: crpd1
+      namespace: testing
+      uid: 9fd53f6c-8f77-4d8d-9cca-c65eb181f889
+  interfaceName: ens4
+  macAddress: 02:62:1e:cb:a6:60
+  managed: true
+  mtu: 9216

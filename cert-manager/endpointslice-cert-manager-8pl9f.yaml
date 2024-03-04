@@ -1,0 +1,42 @@
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+- addresses:
+  - 192.168.0.51
+  conditions:
+    ready: true
+    serving: true
+    terminating: false
+  nodeName: abhi-master-node
+  targetRef:
+    kind: Pod
+    name: cert-manager-7476c8fcf4-hpgrn
+    namespace: cert-manager
+    uid: c28ceae1-761a-466f-a8d1-497c9d28dd4a
+kind: EndpointSlice
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2024-02-15T09:42:32Z"
+  creationTimestamp: "2024-02-01T16:11:54Z"
+  generateName: cert-manager-
+  labels:
+    app: cert-manager
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v1.12.0
+    endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+    kubernetes.io/service-name: cert-manager
+  name: cert-manager-8pl9f
+  namespace: cert-manager
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Service
+    name: cert-manager
+    uid: 7ab26b34-a166-41b6-9c37-49e1409242fd
+ports:
+- name: tcp-prometheus-servicemonitor
+  port: 9402
+  protocol: TCP
