@@ -1,0 +1,37 @@
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+- addresses:
+  - 192.168.0.17
+  conditions:
+    ready: true
+    serving: true
+    terminating: false
+  nodeName: abhi-master-node
+  targetRef:
+    kind: Pod
+    name: controller-595f88d88f-pcgz2
+    namespace: metallb-system
+    uid: 09b4ca28-ee9a-44d8-8505-9669f03ee23b
+kind: EndpointSlice
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2024-02-15T09:42:43Z"
+  creationTimestamp: "2024-02-01T16:12:13Z"
+  generateName: webhook-service-
+  labels:
+    endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+    kubernetes.io/service-name: webhook-service
+  name: webhook-service-6hstb
+  namespace: metallb-system
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Service
+    name: webhook-service
+    uid: f6ef08fa-f931-4bc5-9cab-5878f66bc713
+ports:
+- name: ""
+  port: 9443
+  protocol: TCP
