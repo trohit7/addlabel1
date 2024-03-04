@@ -1,0 +1,26 @@
+apiVersion: core.cerebrum.juniper.net/v1
+kind: InterfaceGroup
+metadata:
+  creationTimestamp: "2024-02-12T12:42:42Z"
+  labels:
+    cerebrum.juniper.net/loopback: "true"
+  name: crpd1-lo0
+  namespace: testing
+  ownerReferences:
+  - apiVersion: crpd.cerebrum.juniper.net/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: CrpdGroup
+    name: crpd1
+    uid: 9fd53f6c-8f77-4d8d-9cca-c65eb181f889
+spec:
+  interfaceName: lo0
+  interfaceTemplate:
+    instanceParent:
+      parentType: crpdGroup
+      reference:
+        apiVersion: crpd.cerebrum.juniper.net/v1
+        kind: CrpdGroup
+        name: crpd1
+        namespace: testing
+        uid: 9fd53f6c-8f77-4d8d-9cca-c65eb181f889
