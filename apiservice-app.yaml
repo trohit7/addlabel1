@@ -4,9 +4,9 @@ metadata:
   creationTimestamp: "2024-02-01T16:00:00Z"
   labels:
     kube-aggregator.kubernetes.io/automanaged: onstart
-  name: v1.apps
+  name: v2.autoscaling
 spec:
-  group: apps
-  groupPriorityMinimum: 17800
-  version: v1
-  versionPriority: 15
+  group: autoscaling
+  groupPriorityMinimum: 17500
+  version: v2
+  versionPriority: 30
