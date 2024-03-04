@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: a9089c841ed9f4cc7eee6900a26ce588d339da48c7eae9724f10b71af3502570
+    cni.projectcalico.org/podIP: 192.168.0.51/32
+    cni.projectcalico.org/podIPs: 192.168.0.51/32
+    k8s.v1.cni.cncf.io/network-status: |-
+      [{
+          "name": "k8s-pod-network",
+          "ips": [
+              "192.168.0.51"
+          ],
+          "default": true,
+          "dns": {}
+      }]
+    k8s.v1.cni.cncf.io/networks-status: |-
+      [{
+          "name": "k8s-pod-network",
+          "ips": [
+              "192.168.0.51"
+          ],
+          "default": true,
+          "dns": {}
+      }]
+    prometheus.io/path: /metrics
+    prometheus.io/port: "9402"
+    prometheus.io/scrape: "true"
+  creationTimestamp: "2024-02-01T16:11:54Z"
+  generateName: cert-manager-7476c8fcf4-
+  labels:
+    app: cert-manager
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v1.12.0
+    pod-template-hash: 7476c8fcf4
+  name: cert-manager-7476c8fcf4-hpgrn
+  namespace: cert-manager
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: cert-manager-7476c8fcf4
+    uid: 596413ae-2979-4952-ab0a-09e0a4fb7e9a
+spec:
+  containers:
+  - args:
+    - --v=2
+    - --cluster-resource-namespace=$(POD_NAMESPACE)
+    - --leader-election-namespace=kube-system
+    - --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver:v1.12.0
+    - --max-concurrent-challenges=60
+    env:
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    image: quay.io/jetstack/cert-manager-controller:v1.12.0
+    imagePullPolicy: IfNotPresent
+    name: cert-manager-controller
+    ports:
+    - containerPort: 9402
+      name: http-metrics
+      protocol: TCP
+    - containerPort: 9403
+      name: http-healthz
+      protocol: TCP
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-znmnc
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: abhi-master-node
+  nodeSelector:
+    kubernetes.io/os: linux
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  serviceAccount: cert-manager
+  serviceAccountName: cert-manager
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-znmnc
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace

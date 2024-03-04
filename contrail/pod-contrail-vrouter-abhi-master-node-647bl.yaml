@@ -1,0 +1,480 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8070"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
+  creationTimestamp: "2024-02-12T12:42:45Z"
+  generateName: contrail-vrouter-abhi-master-node-
+  labels:
+    app: contrail-vrouter-abhi-master-node
+    controller-revision-hash: 86dfb468cc
+    pod-template-generation: "1"
+  name: contrail-vrouter-abhi-master-node-647bl
+  namespace: contrail
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: DaemonSet
+    name: contrail-vrouter-abhi-master-node
+    uid: 3a48d843-a16e-4ed1-919a-4ea87ae134f7
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchFields:
+          - key: metadata.name
+            operator: In
+            values:
+            - abhi-master-node
+  containers:
+  - command:
+    - /vrouter-supervisor
+    env:
+    - name: PODIP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: PODNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: HOSTNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: GATEWAY
+    - name: AGENTMODETYPE
+      value: dpdk
+    - name: DATACONTROLINTERFACE
+      value: ens4
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64/contrail-vrouter-agent:R23.4-95
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        host: 127.0.0.1
+        path: /vrouter-health-check
+        port: 9091
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 20
+      successThreshold: 1
+      timeoutSeconds: 5
+    name: contrail-vrouter-agent
+    resources: {}
+    securityContext:
+      capabilities:
+        add:
+        - SYS_MODULE
+        - NET_ADMIN
+        - SYS_PTRACE
+      privileged: true
+      runAsUser: 0
+    startupProbe:
+      failureThreshold: 3
+      httpGet:
+        host: 127.0.0.1
+        path: /vrouter-health-check
+        port: 9091
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 20
+      successThreshold: 1
+      timeoutSeconds: 5
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/podinfo
+      name: podinfo
+    - mountPath: /var/lib/contrail
+      name: var-lib-contrail
+    - mountPath: /var/run
+      name: var-run
+    - mountPath: /var/run/contrail
+      name: var-run-contrail
+    - mountPath: /etc/contrail
+      name: config-volume
+    - mountPath: /var/crashes
+      name: var-crashes
+    - mountPath: /var/log/contrail
+      name: var-log-contrail
+    - mountPath: /lib/modules
+      name: lib-modules
+    - mountPath: /dev
+      name: dev
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-kwj7q
+      readOnly: true
+  - command:
+    - /dpdk-supervisor
+    env:
+    - name: INTERFACE_LAYER
+      value: l3
+    - name: RESTORE_INTERFACES
+      value: "false"
+    - name: PODNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    envFrom:
+    - configMapRef:
+        name: contrail-vrouter-abhi-master-node-env-configmap
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64/contrail-vrouter-dpdk:R23.4-95
+    imagePullPolicy: IfNotPresent
+    name: contrail-vrouter-agent-dpdk
+    resources:
+      limits:
+        hugepages-1Gi: 6Gi
+        memory: 6Gi
+      requests:
+        hugepages-1Gi: 6Gi
+        memory: 6Gi
+    securityContext:
+      capabilities:
+        add:
+        - SYS_MODULE
+        - NET_ADMIN
+        - SYS_PTRACE
+      privileged: true
+      runAsUser: 0
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /dev
+      name: dev
+    - mountPath: /var/lib/kubelet
+      name: var-lib-kubelet
+    - mountPath: /var/lib/contrail
+      name: var-lib-contrail
+    - mountPath: /dev/hugepages
+      name: hugepages
+    - mountPath: /var/run
+      name: docker-unix-socket
+    - mountPath: /etc/sysconfig/network-scripts
+      name: network-scripts
+    - mountPath: /host/bin
+      name: host-bin
+    - mountPath: /var/log/contrail
+      name: var-log-contrail
+    - mountPath: /usr/src
+      name: usr-src
+    - mountPath: /lib/modules
+      name: lib-modules
+    - mountPath: /var/crashes
+      name: var-crashes
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-kwj7q
+      readOnly: true
+  - command:
+    - /telemetry-exporter
+    - run
+    - -c
+    - /etc/telemetry-exporter/config/config-vrouter.yaml
+    env:
+    - name: TELEMETRY_EXPORTER_SCHEME
+      value: http
+    - name: HOSTNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: TYPE
+      value: vrouter
+    - name: NAMESPACE
+      value: contrail
+    - name: INTROSPECT_SCHEME
+      value: http
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64/contrail-telemetry-exporter:R23.4-95
+    imagePullPolicy: IfNotPresent
+    name: contrail-vrouter-telemetry-exporter
+    ports:
+    - containerPort: 8070
+      hostPort: 8070
+      name: metrics
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /testing
+      name: telemetry-exporter-overrides
+    - mountPath: /etc/config/metrics-collector
+      name: metrics-collector
+    - mountPath: /etc/contrail
+      name: config-volume
+    - mountPath: /etc/config/metrics/tls
+      name: telemetry-exporter-tls
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-kwj7q
+      readOnly: true
+  dnsPolicy: ClusterFirstWithHostNet
+  enableServiceLinks: true
+  hostNetwork: true
+  initContainers:
+  - command:
+    - /contrail-init
+    - -service
+    - vrouter
+    env:
+    - name: PODIP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: PODNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: HOSTNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: NAMESPACE
+      value: contrail
+    - name: DATACONTROLINTERFACE
+      value: ens4
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64/contrail-init:R23.4-95
+    imagePullPolicy: IfNotPresent
+    name: contrail-init
+    resources: {}
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
+      privileged: true
+      runAsUser: 0
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/podinfo
+      name: podinfo
+    - mountPath: /etc/contrail
+      name: config-volume
+    - mountPath: /var/run
+      name: var-run
+    - mountPath: /var/log/contrail
+      name: var-log-contrail
+    - mountPath: /etc/contrail/dynamic-config
+      name: dynamic-config-volume
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-kwj7q
+      readOnly: true
+  - command:
+    - /vrouter-go
+    - /vrouter-go
+    env:
+    - name: PODNAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    envFrom:
+    - configMapRef:
+        name: contrail-vrouter-abhi-master-node-env-configmap
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64/contrail-vrouter-kernel-init-dpdk:R23.4-95
+    imagePullPolicy: IfNotPresent
+    name: contrail-vrouter-kernel-init-dpdk
+    resources: {}
+    securityContext:
+      capabilities:
+        add:
+        - SYS_MODULE
+        - NET_ADMIN
+        - SYS_PTRACE
+      privileged: true
+      runAsUser: 0
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /usr/src
+      name: usr-src
+    - mountPath: /lib/modules
+      name: lib-modules
+    - mountPath: /etc/sysconfig/network-scripts
+      name: network-scripts
+    - mountPath: /host/bin
+      name: host-bin
+    - mountPath: /var/run
+      name: docker-unix-socket
+    - mountPath: /host/etc/contrail
+      name: etc-contrail
+    - mountPath: /var/log/contrail
+      name: var-log-contrail
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-kwj7q
+      readOnly: true
+  nodeName: abhi-master-node
+  preemptionPolicy: PreemptLowerPriority
+  priority: 2000001000
+  priorityClassName: system-node-critical
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 2000
+    runAsGroup: 3000
+    runAsUser: 1000
+  serviceAccount: contrail-serviceaccount
+  serviceAccountName: contrail-serviceaccount
+  shareProcessNamespace: true
+  terminationGracePeriodSeconds: 60
+  tolerations:
+  - effect: NoSchedule
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/disk-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/memory-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/pid-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/unschedulable
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/network-unavailable
+    operator: Exists
+  volumes:
+  - downwardAPI:
+      defaultMode: 420
+      items:
+      - fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.labels
+        path: lables
+    name: podinfo
+  - emptyDir: {}
+    name: config-volume
+  - configMap:
+      defaultMode: 420
+      name: dynamic-config-configmap
+    name: dynamic-config-volume
+  - configMap:
+      defaultMode: 420
+      name: contrail-vrouter-abhi-master-node-cni-configmap
+    name: cni-config-volume
+  - hostPath:
+      path: /var/lib/kubelet
+      type: ""
+    name: var-lib-kubelet
+  - hostPath:
+      path: /var/lib/contrail
+      type: ""
+    name: var-lib-contrail
+  - hostPath:
+      path: /var/run/contrail
+      type: ""
+    name: var-run-contrail
+  - hostPath:
+      path: /var/crashes
+      type: ""
+    name: var-crashes
+  - hostPath:
+      path: /opt/cni/bin
+      type: ""
+    name: main-cni-bin
+  - hostPath:
+      path: /etc/cni/net.d
+      type: ""
+    name: main-cni-conf
+  - hostPath:
+      path: /var/run
+      type: ""
+    name: var-run
+  - hostPath:
+      path: /var/log/jcnr/
+      type: DirectoryOrCreate
+    name: var-log-contrail
+  - hostPath:
+      path: /lib/modules
+      type: ""
+    name: lib-modules
+  - hostPath:
+      path: /sys
+      type: ""
+    name: sys
+  - hostPath:
+      path: /etc
+      type: ""
+    name: etc
+  - configMap:
+      defaultMode: 420
+      name: telemetry-exporter-overrides-configmap
+      optional: true
+    name: telemetry-exporter-overrides
+  - configMap:
+      defaultMode: 420
+      name: metrics-collector-configmap
+      optional: true
+    name: metrics-collector
+  - name: telemetry-exporter-tls
+    secret:
+      defaultMode: 420
+      optional: true
+      secretName: telemetry-exporter-tls
+  - hostPath:
+      path: /dev
+      type: ""
+    name: dev
+  - hostPath:
+      path: /etc/contrail
+      type: ""
+    name: etc-contrail
+  - hostPath:
+      path: /var/run
+      type: ""
+    name: docker-unix-socket
+  - hostPath:
+      path: /usr/src
+      type: ""
+    name: usr-src
+  - hostPath:
+      path: /dev/hugepages
+      type: ""
+    name: hugepages
+  - hostPath:
+      path: /etc/sysconfig/network-scripts
+      type: ""
+    name: network-scripts
+  - hostPath:
+      path: /bin
+      type: ""
+    name: host-bin
+  - name: kube-api-access-kwj7q
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace

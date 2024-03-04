@@ -1,0 +1,233 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-02-12T12:42:41Z"
+  generateName: testing-crpd1-0-
+  labels:
+    app: crpd1-0
+    cerebrum.juniper.net/instanceSelector: crpd1-0
+    cerebrum.juniper.net/instanceType: Crpd
+    controller-revision-hash: testing-crpd1-0-dc657d448
+    crpd.cerebrum.juniper.net/crpd: crpd1-0
+    crpd.cerebrum.juniper.net/crpdNamespace: testing
+    name: crpd1-0
+    statefulset.kubernetes.io/pod-name: testing-crpd1-0-0
+  name: testing-crpd1-0-0
+  namespace: jcnr
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: testing-crpd1-0
+    uid: 767aeca5-3dc9-4536-b39f-5dd1a08239fe
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: cerebrum.juniper.net/instanceType
+            operator: In
+            values:
+            - Crpd
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - image: svl-artifactory.juniper.net/junos-docker-local/warthog/amd64/crpd:23.4R1.9
+    imagePullPolicy: IfNotPresent
+    name: crpd
+    ports:
+    - containerPort: 179
+      hostPort: 179
+      protocol: TCP
+    resources: {}
+    securityContext:
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/certs
+      name: certs
+    - mountPath: /config
+      name: config
+    - mountPath: /var/run
+      name: var-run-crpd
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-m8qsb
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostNetwork: true
+  hostname: testing-crpd1-0-0
+  initContainers:
+  - env:
+    - name: NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: BASE_CONFIG_DIR
+      value: /config
+    - name: POD_IPS
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIPs
+    - name: CRPD_INSTANCE_NAME
+      value: crpd1-0
+    - name: CRPD_INSTANCE_NAMESPACE
+      value: testing
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/cerebrum-crpd-init:61678478c2
+    imagePullPolicy: Always
+    name: init
+    resources: {}
+    securityContext:
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/certs
+      name: certs
+    - mountPath: /config
+      name: config
+    - mountPath: /var/run/vrouter
+      name: var-run-vrouter
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-m8qsb
+      readOnly: true
+  - env:
+    - name: NODE_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.hostIP
+    - name: CRPD_PERSONALITY
+      value: jcnr
+    - name: CRPD_CONFIG_DIR
+      value: /config
+    - name: IS_MASTER
+      value: "False"
+    - name: CRPD_CONFIG_TEMPLATE
+      value: /etc/jcnr/crpdconfig
+    - name: PRIMARY_CNI
+      value: "False"
+    - name: BGP_CONNECT_PORT
+      value: "179"
+    - name: BGP_LISTEN_PORT
+      value: "178"
+    - name: SRGB_START_LABEL
+      value: "400000"
+    - name: SRGB_INDEX_RANGE
+      value: "4000"
+    - name: SYSLOG_REMOTE_DEST
+      value: '@127.0.0.1:50055'
+    - name: CNI_LOG_FILE_SIZE
+      value: "1"
+    - name: CNI_LOG_FILE_COUNT
+      value: "10"
+    - name: CNI_LOG_PATH
+      value: /var/log/jcnr/
+    - name: CNI_LOG_LEVEL
+      value: info
+    image: svl-artifactory.juniper.net/junos-docker-local/warthog/amd64/jcnr-cni:23.4-20231220-fc75ea6
+    imagePullPolicy: IfNotPresent
+    name: install-cni
+    resources: {}
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
+        - NET_RAW
+        - SYS_ADMIN
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /config
+      name: config
+    - mountPath: /host
+      name: cni
+    - mountPath: /var/run
+      name: var-run-crpd
+    - mountPath: /etc/localtime
+      name: host-time
+    - mountPath: /etc/secrets
+      name: secrets
+    - mountPath: /etc/jcnr
+      name: jcnr-config-generated
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-m8qsb
+      readOnly: true
+  nodeName: abhi-master-node
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: crpd
+  serviceAccountName: crpd
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: certs
+  - hostPath:
+      path: /var/run/vrouter
+      type: DirectoryOrCreate
+    name: var-run-vrouter
+  - emptyDir: {}
+    name: config
+  - hostPath:
+      path: /
+      type: ""
+    name: cni
+  - hostPath:
+      path: /var/run/crpd
+      type: DirectoryOrCreate
+    name: var-run-crpd
+  - hostPath:
+      path: /etc/localtime
+      type: ""
+    name: host-time
+  - name: secrets
+    secret:
+      defaultMode: 420
+      secretName: jcnr-secrets
+  - configMap:
+      defaultMode: 420
+      name: jcnr-config-generated
+    name: jcnr-config-generated
+  - name: kube-api-access-m8qsb
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace

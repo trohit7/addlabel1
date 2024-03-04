@@ -1,0 +1,13 @@
+apiVersion: core.cerebrum.juniper.net/v1
+kind: Pool
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"core.cerebrum.juniper.net/v1","kind":"Pool","metadata":{"annotations":{},"name":"default-loopback-addr","namespace":"cerebrum-system"},"spec":{"v4":"12.12.0.0/16"}}
+  creationTimestamp: "2024-02-12T12:00:28Z"
+  labels:
+    cerebrum.juniper.net/usedby_96992b7ab94752efbe767a6bdc94f58e152b052146d0068097647c3a: IpAddress_testing_testing-crpd1-0-lo0
+  name: default-loopback-addr
+  namespace: cerebrum-system
+spec:
+  v4: 12.12.0.0/16

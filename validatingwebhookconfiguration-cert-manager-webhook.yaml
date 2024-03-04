@@ -1,0 +1,53 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from-secret: cert-manager/cert-manager-webhook-ca
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"admissionregistration.k8s.io/v1","kind":"ValidatingWebhookConfiguration","metadata":{"annotations":{"cert-manager.io/inject-ca-from-secret":"cert-manager/cert-manager-webhook-ca"},"labels":{"app":"webhook","app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"cert-manager","app.kubernetes.io/name":"webhook","app.kubernetes.io/version":"v1.12.0"},"name":"cert-manager-webhook"},"webhooks":[{"admissionReviewVersions":["v1"],"clientConfig":{"service":{"name":"cert-manager-webhook","namespace":"cert-manager","path":"/validate"}},"failurePolicy":"Fail","matchPolicy":"Equivalent","name":"webhook.cert-manager.io","namespaceSelector":{"matchExpressions":[{"key":"cert-manager.io/disable-validation","operator":"NotIn","values":["true"]},{"key":"name","operator":"NotIn","values":["cert-manager"]}]},"rules":[{"apiGroups":["cert-manager.io","acme.cert-manager.io"],"apiVersions":["v1"],"operations":["CREATE","UPDATE"],"resources":["*/*"]}],"sideEffects":"None","timeoutSeconds":10}]}
+  creationTimestamp: "2024-02-01T16:11:33Z"
+  labels:
+    app: webhook
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/version: v1.12.0
+  name: cert-manager-webhook
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ3ekNDQVVpZ0F3SUJBZ0lSQUxCOVMxWkpVL1Vad2p2WXF0dXpENGt3Q2dZSUtvWkl6ajBFQXdNd0lqRWcKTUI0R0ExVUVBeE1YWTJWeWRDMXRZVzVoWjJWeUxYZGxZbWh2YjJzdFkyRXdIaGNOTWpRd01qQXhNVFl4TlRVMApXaGNOTWpVd01UTXhNVFl4TlRVMFdqQWlNU0F3SGdZRFZRUURFeGRqWlhKMExXMWhibUZuWlhJdGQyVmlhRzl2CmF5MWpZVEIyTUJBR0J5cUdTTTQ5QWdFR0JTdUJCQUFpQTJJQUJFY0NodENjeGR0S21oRStFSHdLVnF4NGExMXYKU01YK0x2OHRFQS9qbFU1Vy9CT01ZYmxkVGowZTdMd0VkYjFqdG1LNUU5dnViZ01SZHFKS3p5RllVenJPWTB2aQpUMWU0SVlZK3FjY1FLR2g4VUdRS0dpY0lvclRKVG9LQW1nbXBqcU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trCk1BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZDVDB1SUpWTWFDNXZhdEtOL1NDNUVCTU9vdzUKTUFvR0NDcUdTTTQ5QkFNREEya0FNR1lDTVFEMzdDZWptdlI3NVZjcFJaVkRzcWF4bExXbVFLTFBmam9GZU0wRwoySTJvbjRMQ1pUdC9Ubm14RmhDblVNYTZpaklDTVFDNHV6N0E1SEpZUStlYXZWZW8vTmZwUE5kZkQ3QWxUMVhxCmdhWjIya0FMbHhOTHFUNlNiZEN3TzYzdHBPcDVhMFE9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    service:
+      name: cert-manager-webhook
+      namespace: cert-manager
+      path: /validate
+      port: 443
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: webhook.cert-manager.io
+  namespaceSelector:
+    matchExpressions:
+    - key: cert-manager.io/disable-validation
+      operator: NotIn
+      values:
+      - "true"
+    - key: name
+      operator: NotIn
+      values:
+      - cert-manager
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - cert-manager.io
+    - acme.cert-manager.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - '*/*'
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10

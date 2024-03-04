@@ -1,0 +1,258 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: 5ec2dc3c6926269606a4cffc55656833e8cf88741aaacbfbd49fb627bba7dc04
+    cni.projectcalico.org/podIP: 192.168.0.11/32
+    cni.projectcalico.org/podIPs: 192.168.0.11/32
+    jcnr.juniper.net/dpdk-interfaces: |-
+      [
+          {
+              "name": "eth1",
+              "vhost-adaptor-path": "/dpdk/vhost-eth1.sock",
+              "vhost-adaptor-mode": "client",
+              "ipv4-address": "181.1.1.1/30",
+              "mac-address": "aa:bb:cc:dd:01:24"
+          },
+          {
+              "name": "eth2",
+              "vhost-adaptor-path": "/dpdk/vhost-eth2.sock",
+              "vhost-adaptor-mode": "client",
+              "ipv4-address": "1.21.1.1/30",
+              "mac-address": "aa:bb:cc:dd:01:22"
+          }
+      ]
+    k8s.v1.cni.cncf.io/network-status: |-
+      [{
+          "name": "k8s-pod-network",
+          "ips": [
+              "192.168.0.11"
+          ],
+          "default": true,
+          "dns": {}
+      },{
+          "name": "jcnr/net-untrust",
+          "interface": "eth1",
+          "ips": [
+              "181.1.1.1"
+          ],
+          "mac": "aa:bb:cc:dd:01:24",
+          "dns": {}
+      },{
+          "name": "jcnr/net-trust",
+          "interface": "eth2",
+          "ips": [
+              "1.21.1.1"
+          ],
+          "mac": "aa:bb:cc:dd:01:22",
+          "dns": {}
+      }]
+    k8s.v1.cni.cncf.io/networks: |
+      [
+        {
+          "name": "net-untrust",
+          "interface":"eth1",
+          "cni-args": {
+                "mac":"aa:bb:cc:dd:01:24",
+            "interfaceType":"vhost",
+            "dataplane":"dpdk",
+            "rd":"10:10",
+            "ipConfig":{
+              "ipv4":{
+                "address":"181.1.1.1/30",
+                "gateway":"181.1.1.2"
+              }
+            }
+          }
+        },
+        {
+          "name": "net-trust",
+          "interface":"eth2",
+          "cni-args": {
+          "advertiseRoutes": ["222.1.0.0/16"],
+         "mac":"aa:bb:cc:dd:01:22",
+            "interfaceType": "vhost",
+            "dataplane":"dpdk",
+            "rd":"11:11",
+            "ipConfig":{
+              "ipv4":{
+                "address":"1.21.1.1/30",
+                "gateway":"1.21.1.2"
+              }
+            }
+          }
+        }
+      ]
+    k8s.v1.cni.cncf.io/networks-status: |-
+      [{
+          "name": "k8s-pod-network",
+          "ips": [
+              "192.168.0.11"
+          ],
+          "default": true,
+          "dns": {}
+      },{
+          "name": "jcnr/net-untrust",
+          "interface": "eth1",
+          "ips": [
+              "181.1.1.1"
+          ],
+          "mac": "aa:bb:cc:dd:01:24",
+          "dns": {}
+      },{
+          "name": "jcnr/net-trust",
+          "interface": "eth2",
+          "ips": [
+              "1.21.1.1"
+          ],
+          "mac": "aa:bb:cc:dd:01:22",
+          "dns": {}
+      }]
+  creationTimestamp: "2024-02-20T20:45:44Z"
+  generateName: csrx-pod-deployer-b8db8ff4-
+  labels:
+    app: csrx
+    pod-template-hash: b8db8ff4
+  name: csrx-pod-deployer-b8db8ff4-cr96m
+  namespace: jcnr
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: csrx-pod-deployer-b8db8ff4
+    uid: 3538c491-c891-4afc-8448-91b2e7cbcc38
+spec:
+  containers:
+  - env:
+    - name: CSRX_SIZE
+      value: large
+    - name: CSRX_HUGEPAGES
+      value: "yes"
+    - name: CSRX_PACKET_DRIVER
+      value: virtio
+    - name: KUBERNETES_POD_UID
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.uid
+    - name: CSRX_FORWARD_MODE
+      value: routing
+    - name: CSRX_AUTO_ASSIGN_IP
+      value: "yes"
+    - name: CSRX_MGMT_PORT_REORDER
+      value: "no"
+    - name: CSRX_TCP_CKSUM_CALC
+      value: "yes"
+    - name: CSRX_LICENSE_FILE
+      value: /var/jail/csrx_license
+    - name: CSRX_JUNOS_CONFIG
+      value: /var/jail/csrx_config
+    - name: CSRX_CTRL_CPU
+      value: "0x01"
+    - name: CSRX_DATA_CPU
+      value: "0x05"
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/csrx:23.4R1.7
+    imagePullPolicy: Always
+    name: csrx
+    ports:
+    - containerPort: 22
+      protocol: TCP
+    resources:
+      limits:
+        hugepages-1Gi: 4Gi
+        memory: 4Gi
+      requests:
+        hugepages-1Gi: 4Gi
+        memory: 4Gi
+    securityContext:
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /dev
+      name: disk
+    - mountPath: /var/jail
+      name: config
+    - mountPath: /mnt/huge
+      name: hugepage
+    - mountPath: /dpdk
+      name: dpdk
+      subPathExpr: $(KUBERNETES_POD_UID)
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-vm4g9
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  initContainers:
+  - command:
+    - ./csrx-init
+    image: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/csrx-init:f4tgt33
+    imagePullPolicy: Always
+    name: csrx-init
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /config
+      name: csrx-tpl
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-vm4g9
+      readOnly: true
+  nodeName: abhi-master-node
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: csrx
+  serviceAccountName: csrx
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - hostPath:
+      path: /mnt/huge
+      type: ""
+    name: hugepage
+  - hostPath:
+      path: /var/run/jcnr/containers
+      type: ""
+    name: dpdk
+  - hostPath:
+      path: /dev
+      type: Directory
+    name: disk
+  - configMap:
+      defaultMode: 420
+      name: csrx-config-map
+    name: config
+  - configMap:
+      defaultMode: 420
+      name: csrx-tpl
+    name: csrx-tpl
+  - name: kube-api-access-vm4g9
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
