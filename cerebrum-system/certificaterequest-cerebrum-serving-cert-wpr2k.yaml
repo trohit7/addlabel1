@@ -1,0 +1,41 @@
+apiVersion: cert-manager.io/v1
+kind: CertificateRequest
+metadata:
+  annotations:
+    cert-manager.io/certificate-name: cerebrum-serving-cert
+    cert-manager.io/certificate-revision: "1"
+    cert-manager.io/private-key-secret-name: cerebrum-serving-cert-l5f42
+  creationTimestamp: "2024-02-12T11:59:01Z"
+  generateName: cerebrum-serving-cert-
+  labels:
+    app.kubernetes.io/component: certificate
+    app.kubernetes.io/created-by: cerebrum
+    app.kubernetes.io/instance: serving-cert
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: certificate
+    app.kubernetes.io/part-of: cerebrum
+  name: cerebrum-serving-cert-wpr2k
+  namespace: cerebrum-system
+  ownerReferences:
+  - apiVersion: cert-manager.io/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Certificate
+    name: cerebrum-serving-cert
+    uid: df800b75-17f4-401f-a4b3-8c75e80091a9
+spec:
+  extra:
+    authentication.kubernetes.io/pod-name:
+    - cert-manager-7476c8fcf4-hpgrn
+    authentication.kubernetes.io/pod-uid:
+    - c28ceae1-761a-466f-a8d1-497c9d28dd4a
+  groups:
+  - system:serviceaccounts
+  - system:serviceaccounts:cert-manager
+  - system:authenticated
+  issuerRef:
+    kind: Issuer
+    name: cerebrum-selfsigned-issuer
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQzNEQ0NBY1FDQVFBd0FEQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQVBMdApYM21kcUNLTW9Pc0ZPQzljMFo4VFlXQ2FDQlFLcUIyOHEvMTJGbXV6S1NGT1hHWGhmT3FHeUZvKzJhb3hWdUtUCmdHUGZ3d0ZLMlIyVVlaK3BlVG9WMkxHL2YzMjRhNEJoK3dZdjV3VXd0RlhuUUNNRldYaHl6SVBBaURLT3lWbEkKYmxIU1BWMGU5dWdzR2R5ZitaQTlhNE4rVjBGeVBCbGNyd1ZFbkxFWUM0UGI4dTZsNlNybklOYjNUblZIanEyTQpSMFZEd014cnZpYjVOMVI0alUvQ05BMUwzS0FEL1FuY09lRmVkL0ZrYktNaUczWlZUWjdObysySFJNWVZRenNqCmp0b0NpT0xpSkRwWVYxczB3WWxKUWdJMnpSSlBTVjYrVGFTaWRhV1dsK2VHNGVRSm9SK0h2T0RDNjdKMmR3eVQKUlJzeDhyS0I2cE5UTHpHUjFOTUNBd0VBQWFDQmxqQ0Jrd1lKS29aSWh2Y05BUWtPTVlHRk1JR0NNSE1HQTFVZApFUVJzTUdxQ0xHTmxjbVZpY25WdExYZGxZbWh2YjJzdGMyVnlkbWxqWlM1alpYSmxZbkoxYlMxemVYTjBaVzB1CmMzWmpnanBqWlhKbFluSjFiUzEzWldKb2IyOXJMWE5sY25acFkyVXVZMlZ5WldKeWRXMHRjM2x6ZEdWdExuTjIKWXk1amJIVnpkR1Z5TG14dlkyRnNNQXNHQTFVZER3UUVBd0lGb0RBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQQp6STBDQlJMTTNIM0dhMEJ0cE1kWVF4NWwrMUJkWTN4OU1zWVVyV05YUkRLV29oY1NXWnY0dDNEaW9DWi9QOHNqCkRkZWYzakUyMTNkQ2Rhb25iNEtncmMrODhVWk02MjMzanpIaTZBL1EyMzFYMUZZcVByTDFRRm9NZ09aUFBQaVgKZlFIaFdXdGx4QUVndW52Y3p4ZUhGWG05dW1LYWhxTWFESDlEcnN6Y0poOEl1VnoySlZnSXhERFUzRkYyakJQWgpBVU82eW5KVDAyQ3pxQ04zeVNPR0dOekljeDAwZm9zYTFMWS8wWHpuL3ZMV2pRRk9XaCtVSTlxYU1VWnU0RFo5CmdUYjdlUlRSNnpzRVRWZ25pQlBpdjBvYVNLU1FIU2tWQWk2Z3BiU0txZmM3ZHVmeC9MV0Z1Ui9vMkFIYTVjOVYKMHRSckRCNEpSUHpNVkpsZHlyOXhDdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  uid: 02aedc6e-301b-4ec6-b9f5-c632eb0936c0
+  username: system:serviceaccount:cert-manager:cert-manager

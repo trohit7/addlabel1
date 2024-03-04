@@ -1,0 +1,28 @@
+apiVersion: crpd.cerebrum.juniper.net/v1
+kind: CrpdGroup
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"crpd.cerebrum.juniper.net/v1","kind":"CrpdGroup","metadata":{"annotations":{},"labels":{"cerebrum.juniper.net/instanceSelector":"crpd1","name":"crpd1"},"name":"crpd1","namespace":"testing"},"spec":{"crpdTemplate":{"image":"svl-artifactory.juniper.net/junos-docker-local/warthog/amd64/crpd:23.4R1.9","initImage":"svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/cerebrum-crpd-init:61678478c2","interfaces":["^ens4$","^ens5$","^eth0$"],"vrouter":{"dpdkUioDriver":"uio_pci_generic","imageRepository":"svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64","imageTag":"R23.4-95"}},"replicas":1}}
+  creationTimestamp: "2024-02-12T12:42:41Z"
+  finalizers:
+  - crpdGroup.finalizers.core.cerebrum.juniper.net
+  labels:
+    cerebrum.juniper.net/instanceSelector: crpd1
+    crpd.cerebrum.juniper.net/crpdGroup: crpd1
+    name: crpd1
+  name: crpd1
+  namespace: testing
+spec:
+  crpdTemplate:
+    image: svl-artifactory.juniper.net/junos-docker-local/warthog/amd64/crpd:23.4R1.9
+    initImage: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/cerebrum-crpd-init:61678478c2
+    interfaces:
+    - ^ens4$
+    - ^ens5$
+    - ^eth0$
+    vrouter:
+      dpdkUioDriver: uio_pci_generic
+      imageRepository: svl-artifactory.juniper.net/atom-docker/cn2/bazel-build/dev/x86_64
+      imageTag: R23.4-95
+  replicas: 1

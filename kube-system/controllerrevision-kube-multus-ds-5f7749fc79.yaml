@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+data:
+  spec:
+    template:
+      $patch: replace
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: multus
+          name: multus
+          tier: node
+      spec:
+        containers:
+        - args:
+          - --multus-conf-file=auto
+          - --cni-version=0.3.1
+          command:
+          - /entrypoint.sh
+          image: ghcr.io/k8snetworkplumbingwg/multus-cni:v3.9.2
+          imagePullPolicy: IfNotPresent
+          name: kube-multus
+          resources:
+            limits:
+              cpu: 100m
+              memory: 50Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /host/etc/cni/net.d
+            name: cni
+          - mountPath: /host/opt/cni/bin
+            name: cnibin
+          - mountPath: /tmp/multus-conf
+            name: multus-cfg
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: multus
+        serviceAccountName: multus
+        terminationGracePeriodSeconds: 10
+        tolerations:
+        - effect: NoSchedule
+          operator: Exists
+        volumes:
+        - hostPath:
+            path: /etc/cni/net.d
+            type: ""
+          name: cni
+        - hostPath:
+            path: /opt/cni/bin
+            type: ""
+          name: cnibin
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: cni-conf.json
+              path: 70-multus.conf
+            name: multus-cni-config
+          name: multus-cfg
+kind: ControllerRevision
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "1"
+  creationTimestamp: "2024-02-01T16:00:18Z"
+  labels:
+    app: multus
+    controller-revision-hash: 5f7749fc79
+    name: multus
+    tier: node
+  name: kube-multus-ds-5f7749fc79
+  namespace: kube-system
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: DaemonSet
+    name: kube-multus-ds
+    uid: 325d29df-ad2a-41df-8605-999b3de9da43
+revision: 1

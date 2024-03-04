@@ -1,0 +1,12 @@
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  creationTimestamp: "2024-02-01T16:12:12Z"
+  labels:
+    kube-aggregator.kubernetes.io/automanaged: "true"
+  name: v1beta1.metallb.io
+spec:
+  group: metallb.io
+  groupPriorityMinimum: 1000
+  version: v1beta1
+  versionPriority: 100

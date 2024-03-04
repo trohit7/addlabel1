@@ -1,0 +1,45 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"app":"metallb"},"name":"metallb-system:speaker"},"rules":[{"apiGroups":[""],"resources":["services","endpoints","nodes","namespaces"],"verbs":["get","list","watch"]},{"apiGroups":["discovery.k8s.io"],"resources":["endpointslices"],"verbs":["get","list","watch"]},{"apiGroups":[""],"resources":["events"],"verbs":["create","patch"]},{"apiGroups":["policy"],"resourceNames":["speaker"],"resources":["podsecuritypolicies"],"verbs":["use"]}]}
+  creationTimestamp: "2024-02-01T16:12:13Z"
+  labels:
+    app: metallb
+  name: metallb-system:speaker
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  - nodes
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - policy
+  resourceNames:
+  - speaker
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
