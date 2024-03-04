@@ -6,12 +6,15 @@ metadata:
   creationTimestamp: "2024-02-01T16:00:02Z"
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
-  name: system:controller:daemon-set-controller
+  name: system:public-info-viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:controller:daemon-set-controller
+  name: system:public-info-viewer
 subjects:
-- kind: ServiceAccount
-  name: daemon-set-controller
-  namespace: kube-system
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: system:authenticated
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: system:unauthenticated
